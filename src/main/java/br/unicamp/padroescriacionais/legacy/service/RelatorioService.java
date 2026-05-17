@@ -5,8 +5,10 @@ import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 import br.unicamp.padroescriacionais.legacy.domain.TipoRelatorio;
 import br.unicamp.padroescriacionais.legacy.generator.CsvRelatorioGenerator;
+import br.unicamp.padroescriacionais.legacy.generator.HtmlRelatorioGenerator;
 import br.unicamp.padroescriacionais.legacy.generator.JsonRelatorioGenerator;
 import br.unicamp.padroescriacionais.legacy.generator.PdfRelatorioGenerator;
+import br.unicamp.padroescriacionais.legacy.generator.XmlRelatorioGenerator;
 
 import java.time.LocalDateTime;
 
@@ -58,6 +60,12 @@ public class RelatorioService {
             return generator.gerar(relatorio);
         } else if (formato == FormatoRelatorio.JSON) {
             JsonRelatorioGenerator generator = new JsonRelatorioGenerator();
+            return generator.gerar(relatorio);
+        } else if (formato == FormatoRelatorio.XML) {
+            XmlRelatorioGenerator generator = new XmlRelatorioGenerator();
+            return generator.gerar(relatorio);
+        } else if (formato == FormatoRelatorio.HTML) {
+            HtmlRelatorioGenerator generator = new HtmlRelatorioGenerator();
             return generator.gerar(relatorio);
         } else {
             throw new IllegalArgumentException("Formato desconhecido: " + formato);

@@ -6,6 +6,7 @@ import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 import br.unicamp.padroescriacionais.legacy.generator.CsvRelatorioGenerator;
 import br.unicamp.padroescriacionais.legacy.generator.JsonRelatorioGenerator;
 import br.unicamp.padroescriacionais.legacy.generator.PdfRelatorioGenerator;
+import br.unicamp.padroescriacionais.legacy.generator.XmlRelatorioGenerator;
 
 public class ExportacaoService {
 
@@ -31,6 +32,10 @@ public class ExportacaoService {
             case JSON:
                 JsonRelatorioGenerator jsonGenerator = new JsonRelatorioGenerator();
                 conteudoFormatado = jsonGenerator.gerar(relatorio);
+                break;
+            case XML:
+                XmlRelatorioGenerator XmlGenerator = new XmlRelatorioGenerator();
+                conteudoFormatado = XmlGenerator.gerar(relatorio);
                 break;
             default:
                 throw new IllegalArgumentException("Formato nao suportado para exportacao: " + formato);
