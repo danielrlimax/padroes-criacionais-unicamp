@@ -37,6 +37,10 @@ public class ExportacaoService {
                 XmlRelatorioGenerator XmlGenerator = new XmlRelatorioGenerator();
                 conteudoFormatado = XmlGenerator.gerar(relatorio);
                 break;
+            case HTML:
+                XmlRelatorioGenerator HtmlGenerator = new XmlRelatorioGenerator();
+                conteudoFormatado = HtmlGenerator.gerar(relatorio);
+                break;
             default:
                 throw new IllegalArgumentException("Formato nao suportado para exportacao: " + formato);
         }
