@@ -4,11 +4,9 @@ import br.unicamp.padroescriacionais.legacy.domain.ConfiguracaoSistema;
 import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 import br.unicamp.padroescriacionais.legacy.domain.TipoRelatorio;
-import br.unicamp.padroescriacionais.legacy.generator.CsvRelatorioGenerator;
-import br.unicamp.padroescriacionais.legacy.generator.HtmlRelatorioGenerator;
-import br.unicamp.padroescriacionais.legacy.generator.JsonRelatorioGenerator;
-import br.unicamp.padroescriacionais.legacy.generator.PdfRelatorioGenerator;
-import br.unicamp.padroescriacionais.legacy.generator.XmlRelatorioGenerator;
+import br.unicamp.padroescriacionais.legacy.factory.RelatorioGeneratorFactory;
+import br.unicamp.padroescriacionais.legacy.factory.RelatorioGeneratorFactoryProvider;
+import br.unicamp.padroescriacionais.legacy.generator.*;
 
 import java.time.LocalDateTime;
 
@@ -50,24 +48,10 @@ public class RelatorioService {
             System.out.println("[DEBUG-RelatorioService] Gerando: " + tipo + " -> " + formato);
         }
 
-        if (formato == FormatoRelatorio.PDF) {
-            PdfRelatorioGenerator generator = new PdfRelatorioGenerator();
-            return generator.gerar(relatorio);
-        } else if (formato == FormatoRelatorio.CSV) {
-            CsvRelatorioGenerator generator = new CsvRelatorioGenerator();
-            return generator.gerar(relatorio);
-        } else if (formato == FormatoRelatorio.JSON) {
-            JsonRelatorioGenerator generator = new JsonRelatorioGenerator();
-            return generator.gerar(relatorio);
-        } else if (formato == FormatoRelatorio.XML) {
-            XmlRelatorioGenerator generator = new XmlRelatorioGenerator();
-            return generator.gerar(relatorio);
-        } else if (formato == FormatoRelatorio.HTML) {
-            HtmlRelatorioGenerator generator = new HtmlRelatorioGenerator();
-            return generator.gerar(relatorio);
-        } else {
-            throw new IllegalArgumentException("Formato desconhecido: " + formato);
-        }
+        RelatorioGeneratorFactory factory = RelatorioGeneratorFactoryProvider.getFactory(formato);
+        RelatorioGenerator generator = factory.criarGenerator();
+
+        return generator.gerar(relatorio);
     }
 
     private String gerarConteudoVendas() {

@@ -1,8 +1,9 @@
 package br.unicamp.padroescriacionais.legacy.generator;
 
+import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 
-public class XmlRelatorioGenerator {
+public class XmlRelatorioGenerator implements RelatorioGenerator{
     public String gerar(Relatorio relatorio){
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");

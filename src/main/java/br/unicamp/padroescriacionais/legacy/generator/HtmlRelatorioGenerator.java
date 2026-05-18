@@ -1,8 +1,9 @@
 package br.unicamp.padroescriacionais.legacy.generator;
 
+import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 
-public class HtmlRelatorioGenerator {
+public class HtmlRelatorioGenerator implements RelatorioGenerator{
     public String gerar(Relatorio relatorio){
         StringBuilder sb = new StringBuilder();
         String conteudo = scapeHtml(relatorio.getConteudo()).replace("\n", "<br>\n");
@@ -26,7 +27,7 @@ public class HtmlRelatorioGenerator {
         return sb.toString();
     }
 
-        private String scapeHtml(String valor){
+    private String scapeHtml(String valor){
         if(valor == null){
             return "";
         }
