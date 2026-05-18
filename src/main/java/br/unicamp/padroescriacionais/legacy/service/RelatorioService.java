@@ -12,16 +12,14 @@ import br.unicamp.padroescriacionais.legacy.generator.XmlRelatorioGenerator;
 
 import java.time.LocalDateTime;
 
-public class RelatorioService {
-
-    private ConfiguracaoSistema configuracao = new ConfiguracaoSistema(
-            "Empresa XPTO",
-            "DEV",
-            "/tmp/relatorios",
-            false
-    );
+public class RelatorioService { 
+    private ConfiguracaoSistema configuracao = ConfiguracaoSistema.getInstance();
 
     public Relatorio criarRelatorio(TipoRelatorio tipo) {
+        //Alterando configurações especificas
+        configuracao.setNomeEmpresa("Empresa XPTO");
+        configuracao.setDebugAtivo(false);
+
         String titulo;
         String conteudo;
 

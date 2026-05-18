@@ -10,14 +10,13 @@ import br.unicamp.padroescriacionais.legacy.generator.XmlRelatorioGenerator;
 
 public class ExportacaoService {
 
-    private ConfiguracaoSistema configuracao = new ConfiguracaoSistema(
-            "Empresa XPTO Ltda.",
-            "PROD",
-            "/var/exports/relatorios",
-            false
-    );
+    private ConfiguracaoSistema configuracao = ConfiguracaoSistema.getInstance();
 
     public void exportar(Relatorio relatorio, FormatoRelatorio formato) {
+        //Alterando a configuração global para a exportação
+        configuracao.setAmbiente("PROD");
+        configuracao.setDiretorioExportacao("/var/exports/relatorios");
+        configuracao.setDebugAtivo(false);
         String conteudoFormatado;
 
         switch (formato) {

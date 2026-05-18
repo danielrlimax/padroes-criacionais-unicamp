@@ -2,17 +2,29 @@ package br.unicamp.padroescriacionais.legacy.domain;
 
 public class ConfiguracaoSistema {
 
+    //Instancia estática e privada
+    private static ConfiguracaoSistema instance;
+
     private String nomeEmpresa;
     private String ambiente;
     private String diretorioExportacao;
     private boolean debugAtivo;
 
-    public ConfiguracaoSistema(String nomeEmpresa, String ambiente,
-                               String diretorioExportacao, boolean debugAtivo) {
-        this.nomeEmpresa = nomeEmpresa;
-        this.ambiente = ambiente;
-        this.diretorioExportacao = diretorioExportacao;
-        this.debugAtivo = debugAtivo;
+    //Construtor privado
+    private ConfiguracaoSistema(){
+        this.nomeEmpresa = "Empresa XPTO Ltda.";
+        this.ambiente = "DEV";
+        this.diretorioExportacao = "/tmp/relatorios";
+        this.debugAtivo = true;
+    }
+
+    //Metodo global para acessar instancia unica
+    public static ConfiguracaoSistema getInstance(){
+        if(instance == null){
+            instance = new ConfiguracaoSistema();
+        }
+
+        return instance;
     }
 
     public String getNomeEmpresa() {

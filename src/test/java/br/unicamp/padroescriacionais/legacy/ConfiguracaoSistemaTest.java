@@ -8,14 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ConfiguracaoSistemaTest {
 
+    //ConfiguracaoSistema configuracao = ConfiguracaoSistema.getInstance();
+
     @Test
     void deveCriarConfiguracaoComValoresInformados() {
-        ConfiguracaoSistema config = new ConfiguracaoSistema(
-                "Empresa Teste",
-                "DEV",
-                "/tmp/test",
-                true
-        );
+        ConfiguracaoSistema config = ConfiguracaoSistema.getInstance();
+        config.setNomeEmpresa("Empresa Teste");
+        config.setDiretorioExportacao("/tmp/test");
 
         assertEquals("Empresa Teste", config.getNomeEmpresa());
         assertEquals("DEV", config.getAmbiente());
@@ -25,7 +24,7 @@ class ConfiguracaoSistemaTest {
 
     @Test
     void devePermitirAlteracaoDeAmbiente() {
-        ConfiguracaoSistema config = new ConfiguracaoSistema("Empresa", "DEV", "/tmp", false);
+        ConfiguracaoSistema config = ConfiguracaoSistema.getInstance();
         config.setAmbiente("PROD");
 
         assertEquals("PROD", config.getAmbiente());
@@ -33,7 +32,9 @@ class ConfiguracaoSistemaTest {
 
     @Test
     void devePermitirAlteracaoDeDebug() {
-        ConfiguracaoSistema config = new ConfiguracaoSistema("Empresa", "DEV", "/tmp", false);
+        ConfiguracaoSistema config = ConfiguracaoSistema.getInstance();
+        config.setDebugAtivo(false);
+
         config.setDebugAtivo(true);
 
         assertTrue(config.isDebugAtivo());
@@ -41,31 +42,39 @@ class ConfiguracaoSistemaTest {
 
     @Test
     void devePermitirAlteracaoDeDiretorio() {
-        ConfiguracaoSistema config = new ConfiguracaoSistema("Empresa", "DEV", "/tmp", false);
+        ConfiguracaoSistema config = ConfiguracaoSistema.getInstance();
         config.setDiretorioExportacao("/novo/diretorio");
 
         assertEquals("/novo/diretorio", config.getDiretorioExportacao());
     }
 
     @Test
-    void duasInstanciasIndependentesPodemTerAmbientesDiferentes() {
-        ConfiguracaoSistema configDev = new ConfiguracaoSistema("Empresa", "DEV", "/tmp", true);
-        ConfiguracaoSistema configProd = new ConfiguracaoSistema("Empresa", "PROD", "/exports", false);
+    void deveGarantirQueAInstanciaUnicaSejaCompartilhada() {
+        ConfiguracaoSistema configDev = ConfiguracaoSistema.getInstance();
+        configDev.setAmbiente("DEV");
 
-        assertNotEquals(configDev.getAmbiente(), configProd.getAmbiente());
-        assertNotEquals(configDev.getDiretorioExportacao(), configProd.getDiretorioExportacao());
-        assertNotEquals(configDev.isDebugAtivo(), configProd.isDebugAtivo());
+        ConfiguracaoSistema configProd = ConfiguracaoSistema.getInstance();
+        configProd.setAmbiente("PROD"); //Ao alterar no configProd, altera para o sistema todo
+
+        //As variáveis apontam para o mesmo espaço de memória
+        assertSame(configDev, configProd); 
+        
+        //O ambiente de configDev agora é PROD, porque configProd sobrescreveu a instância global
+        assertEquals("PROD", configDev.getAmbiente()); 
+        assertEquals("PROD", configProd.getAmbiente());
     }
-
+    
     @Test
-    void alteracaoEmUmaInstanciaNaoAfetaOutra() {
-        ConfiguracaoSistema config1 = new ConfiguracaoSistema("Empresa", "DEV", "/tmp", false);
-        ConfiguracaoSistema config2 = new ConfiguracaoSistema("Empresa", "DEV", "/tmp", false);
+    void alteracaoEmUmaReferenciaAfetaTodasAsOutrasNoSingleton() {
+        ConfiguracaoSistema config1 = ConfiguracaoSistema.getInstance();
+        ConfiguracaoSistema config2 = ConfiguracaoSistema.getInstance();
 
+        // Alteramos a config1
         config1.setAmbiente("PROD");
 
+        //Ambas devem ser PROD, porque config1 e config2 são a MESMA instância
         assertEquals("PROD", config1.getAmbiente());
-        assertEquals("DEV", config2.getAmbiente());
+        assertEquals("PROD", config2.getAmbiente());
     }
 
     @Test
